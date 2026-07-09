@@ -147,9 +147,16 @@
 (defn request-changes! [s proposal-id opts] (review! s proposal-id :request-changes opts))
 
 (defn approved-proposals
+  "Every :approved proposal, or (with :proposal-id) just the one named -- so
+  a caller that just approved a single proposal can merge! exactly that one
+  instead of sweeping every other proposal that happens to also be sitting
+  in :approved (e.g. one still awaiting a human's own separate merge!)."
   ([s] (approved-proposals s {}))
-  ([s {:keys [limit] :or {limit 50}}]
+  ([s {:keys [limit proposal-id] :or {limit 50}}]
    (->> (store/list-entities s :proposal #(= :approved (:kotoba.issue.proposal/status %)))
+        (filter (if proposal-id
+                  #(= proposal-id (:kotoba.issue.proposal/id %))
+                  (constantly true)))
         (take limit)
         vec)))
 
@@ -159,7 +166,14 @@
   "Execute approved proposals through caller-supplied handlers keyed by
   :kotoba.issue.proposal/kind. merge! only owns the state machine + audit;
   handlers decide *how* a kind of proposal is realized. Missing handlers mark
-  the proposal :failed instead of executing arbitrary work."
+  the proposal :failed instead of executing arbitrary work.
+
+  Without opts, this sweeps EVERY currently :approved proposal in the store
+  -- pass {:proposal-id id} to scope it to just one (the caller's own),
+  which any interpreter that just approved a single proposal itself should
+  always do, or it will also execute unrelated proposals that merely happen
+  to be sitting in :approved (e.g. one still awaiting a separate human
+  merge!)."
   ([s handlers] (merge! s handlers {}))
   ([s handlers opts]
    (mapv

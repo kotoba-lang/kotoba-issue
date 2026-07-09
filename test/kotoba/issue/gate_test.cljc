@@ -35,6 +35,19 @@
       (is (= [{:proposal-id "prop-1" :status :merged}] results))
       (is (= :merged (:kotoba.issue.proposal/status (store/get-entity s :proposal "prop-1")))))))
 
+(deftest merge-with-proposal-id-only-touches-that-one
+  (let [s (fresh-store)
+        _ (sample-issue s)
+        _ (gate/propose! s {:id "prop-1a" :issue "issue-1" :kind :gmail/archive :risk :read-only})
+        _ (gate/propose! s {:id "prop-1b" :issue "issue-1" :kind :gmail/archive :risk :read-only})
+        _ (gate/approve! s "prop-1a" {:decider "jun"})
+        _ (gate/approve! s "prop-1b" {:decider "jun"})
+        results (gate/merge! s {:gmail/archive (fn [_] {:archived true})} {:proposal-id "prop-1a"})]
+    (is (= [{:proposal-id "prop-1a" :status :merged}] results))
+    (is (= :merged (:kotoba.issue.proposal/status (store/get-entity s :proposal "prop-1a"))))
+    (is (= :approved (:kotoba.issue.proposal/status (store/get-entity s :proposal "prop-1b")))
+        "an unrelated approved proposal must not be swept in by a scoped merge!")))
+
 (deftest reject-is-terminal
   (let [s (fresh-store)
         _ (sample-issue s)
