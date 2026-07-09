@@ -122,6 +122,10 @@
     (if (= :auto-mergeable routing)
       (let [_ (gate/approve! store proposal-id {:decider "kotoba.issue.run/auto"
                                                  :note "auto-merge: risk tier allows"})
-            merged (gate/merge! store handlers {})]
+            ;; Scope to just the proposal this call approved -- otherwise
+            ;; merge! sweeps every :approved proposal in the store,
+            ;; including unrelated ones from other runs still awaiting
+            ;; their own separate human review/merge!.
+            merged (gate/merge! store handlers {:proposal-id proposal-id})]
         {:proposal-id proposal-id :routing routing :merged merged})
       {:proposal-id proposal-id :routing routing})))

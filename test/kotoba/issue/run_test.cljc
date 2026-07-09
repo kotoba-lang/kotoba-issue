@@ -63,6 +63,33 @@
         {:keys [run]} (run/resume-after-review run :approve 3 {:merged merged})]
     (is (= :done (:phase run)))))
 
+(deftest auto-merge-does-not-touch-an-unrelated-approved-proposal
+  (testing "run B's auto-merge must not sweep in run A's proposal, which a
+            human already approved in the gate but hasn't merge!-d yet"
+    (let [s (store/mem-store)
+          handlers {:gmail/draft (fn [_] {:drafted true}) :gmail/archive (fn [_] {:archived true})}
+
+          rA0 (run/new-run {:run-id "rA" :issue-id "issue-1" :ts 0})
+          stepA (run/step draft-plan-fn rA0 {:type :advance :ts 1})
+          resultA (run/interpret-propose! s handlers default-autonomy (first (:effects stepA)))
+          runA (:run (run/observe (:run stepA) resultA 2))]
+      (is (= :awaiting-approval (:phase runA)))
+
+      ;; a human approves prop-rA in the gate but has NOT called merge! yet
+      (gate/approve! s "prop-rA" {:decider "jun"})
+      (is (= :approved (:kotoba.issue.proposal/status (store/get-entity s :proposal "prop-rA"))))
+
+      ;; an unrelated run B auto-merges a low-risk proposal of its own
+      (let [rB0 (run/new-run {:run-id "rB" :issue-id "issue-2" :ts 3})
+            stepB (run/step archive-plan-fn rB0 {:type :advance :ts 3})
+            resultB (run/interpret-propose! s handlers default-autonomy (first (:effects stepB)))
+            runB (:run (run/observe (:run stepB) resultB 4))]
+        (is (= :done (:phase runB)))
+        (is (= :merged (:kotoba.issue.proposal/status (store/get-entity s :proposal "prop-rB")))))
+
+      (is (= :approved (:kotoba.issue.proposal/status (store/get-entity s :proposal "prop-rA")))
+          "run B's auto-merge must not have touched run A's still-pending proposal"))))
+
 (deftest reject-resume-ends-in-error
   (let [r0 (run/new-run {:run-id "r5" :issue-id "issue-1" :ts 0})
         r (assoc r0 :phase :awaiting-approval :proposal "prop-r5")
