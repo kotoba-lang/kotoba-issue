@@ -1,4 +1,4 @@
-# kotoba-issue-clj
+# kotoba-issue
 
 A generic **issue → proposal(PR) → review → merge → audit** gate, in portable
 Clojure (`.cljc`, zero third-party dependencies).
@@ -57,7 +57,7 @@ src/kotoba/issue/
 
 ```clojure
 ;; deps.edn
-;; {:deps {io.github.kotoba-lang/kotoba-issue-clj {:git/tag "v0.1.0" :git/sha "…"}}}
+;; {:deps {io.github.kotoba-lang/kotoba-issue {:git/tag "v0.1.0" :git/sha "…"}}}
 
 (require '[kotoba.issue.store :as store]
          '[kotoba.issue.gate :as gate]
@@ -100,7 +100,7 @@ Wiring the pure run FSM to the gate:
 ## Mapping from source apps
 
 See [`docs/adr/0001-architecture.md`](docs/adr/0001-architecture.md) for the
-full cloud-itonami/manimani → kotoba-issue-clj correspondence table.
+full cloud-itonami/manimani → kotoba-issue correspondence table.
 
 ## Tests
 
