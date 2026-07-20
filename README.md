@@ -97,6 +97,19 @@ Wiring the pure run FSM to the gate:
 (run/observe (:run step1) result 2)   ; -> :done (auto-merged) or :awaiting-approval
 ```
 
+## BCF 3.0 model issues
+
+`kotoba.issue.bcf` provides a portable buildingSMART BCF 3.0 topic, comment,
+camera viewpoint, component-selection, visibility, and clipping-plane contract.
+Topics adapt directly to the generic issue gate, and IDS validation failures can
+be converted into model-linked BCF topics while retaining IFC GlobalIds.
+
+On the JVM, `kotoba.issue.bcf.xml` reads and writes `markup.bcf`, viewpoint
+`.bcfv` XML, and complete `.bcfzip` byte streams, including optional PNG/JPEG
+snapshot entries. XML parsing disables DTD and external-entity resolution.
+Generated markup and visualization XML are checked against the official
+buildingSMART BCF 3.0 `markup.xsd` and `visinfo.xsd` schemas.
+
 ## Mapping from source apps
 
 See [`docs/adr/0001-architecture.md`](docs/adr/0001-architecture.md) for the
