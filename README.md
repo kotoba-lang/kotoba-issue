@@ -115,9 +115,12 @@ buildingSMART BCF 3.0 `markup.xsd` and `visinfo.xsd` schemas.
 `kotoba.issue.opencde` supplies a transport-neutral OpenCDE boundary for
 foundation discovery, project memberships, immutable document versions, BCF
 topic synchronization, optimistic concurrency, idempotent retries, and audit
-event cursors. HTTP and persistent-storage adapters remain host concerns, so
-the same contract can back cloud-itonami, an editor-local offline store, or a
-standalone CDE service.
+event cursors. JVM hosts can use `kotoba.issue.opencde.http` for real
+authenticated JSON/HTTP Foundation discovery, Documents 1.0 exchange, and BCF
+3.0 topic exchange. It applies bearer authentication, URL encoding,
+idempotency and optimistic `If-Match` headers, timeouts, and structured HTTP
+errors while keeping server-framework and persistent-storage choices local to
+the host.
 
 ## Mapping from source apps
 
