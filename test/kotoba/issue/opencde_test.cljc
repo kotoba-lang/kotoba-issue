@@ -33,7 +33,13 @@
         topic-request {:topic topic :expected-revision 0
                        :idempotency-key "topic-v1" :timestamp 3}
         topic-created (cde/put-topic state-1 "tower" "reviewer" topic-request)
-        state-2 (:opencde/state topic-created)]
+        state-2 (:opencde/state topic-created)
+        normalized-topic (get-in topic-created [:opencde/topic :topic/value])
+        normalized-update
+        (cde/put-topic state-2 "tower" "reviewer"
+                       {:topic (assoc normalized-topic :bcf.topic/status "Resolved")
+                        :expected-revision 1 :idempotency-key "topic-v2"
+                        :timestamp 4})]
     (is (= #{"foundation" "bcf" "documents"}
            (set (map :api-id (:versions info)))))
     (is (= :created (:opencde/status created)))
@@ -45,6 +51,7 @@
             (cde/get-document state-2 "tower" "guest" "model"))))
     (is (= 1 (count (cde/list-documents state-2 "tower" "guest"))))
     (is (= :created (:opencde/status topic-created)))
+    (is (= :updated (:opencde/status normalized-update)))
     (is (= "Pipe clash"
            (get-in (cde/get-topic state-2 "tower" "guest"
                                   "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA")
