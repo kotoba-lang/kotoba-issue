@@ -110,6 +110,15 @@ snapshot entries. XML parsing disables DTD and external-entity resolution.
 Generated markup and visualization XML are checked against the official
 buildingSMART BCF 3.0 `markup.xsd` and `visinfo.xsd` schemas.
 
+## OpenCDE service contract
+
+`kotoba.issue.opencde` supplies a transport-neutral OpenCDE boundary for
+foundation discovery, project memberships, immutable document versions, BCF
+topic synchronization, optimistic concurrency, idempotent retries, and audit
+event cursors. HTTP and persistent-storage adapters remain host concerns, so
+the same contract can back cloud-itonami, an editor-local offline store, or a
+standalone CDE service.
+
 ## Mapping from source apps
 
 See [`docs/adr/0001-architecture.md`](docs/adr/0001-architecture.md) for the
