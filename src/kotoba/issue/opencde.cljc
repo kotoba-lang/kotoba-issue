@@ -161,7 +161,7 @@
     (throw (ex-info "invalid OpenCDE BCF topic request" {:request request})))
   (if-let [cached (idempotent-result state project-id idempotency-key request)]
     (assoc cached :opencde/state state :opencde/status :deduplicated)
-    (let [topic (bcf/topic topic)
+    (let [topic (if (:bcf.topic/guid topic) topic (bcf/topic topic))
           topic-id (:bcf.topic/guid topic)
           current (get-in state [:opencde/projects project-id :project/topics topic-id])
           head (or (:topic/revision current) 0)]
