@@ -1,5 +1,5 @@
 (ns kotoba.issue.opencde-http-test
-  (:require [clojure.data.json :as json]
+  (:require [json.data-json :as json]
             [clojure.test :refer [deftest is]]
             [kotoba.issue.opencde.http :as http])
   (:import [com.sun.net.httpserver HttpExchange HttpHandler HttpServer]
