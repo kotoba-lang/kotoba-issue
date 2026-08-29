@@ -1,6 +1,6 @@
 (ns kotoba.issue.opencde.http
   "JDK HTTP client for OpenCDE Foundation, Documents and BCF APIs."
-  (:require [clojure.data.json :as json]
+  (:require [json.data-json :as json]
             [clojure.string :as string])
   (:import [java.net URI URLEncoder]
            [java.net.http HttpClient HttpRequest HttpRequest$BodyPublishers
