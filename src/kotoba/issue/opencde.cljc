@@ -2,7 +2,7 @@
   "Transport-neutral OpenCDE-compatible project, document, and BCF topic
   service. HTTP adapters can expose these pure operations without coupling the
   shared contract to a server framework or database."
-  (:require [clojure.string :as string]
+  (:require [kotoba.lang.text :as string]
             [kotoba.issue.bcf :as bcf]))
 
 (def contract-version 1)
@@ -187,7 +187,7 @@
 (defn get-topic [state project-id actor topic-guid]
   (require-authorized! state project-id actor :topic/read)
   (get-in state [:opencde/projects project-id :project/topics
-                 (string/lower-case (str topic-guid))]))
+                 (string/lower (str topic-guid))]))
 
 (defn list-topics [state project-id actor]
   (require-authorized! state project-id actor :topic/read)

@@ -1,6 +1,6 @@
 (ns kotoba.issue.bcf.xml
   "Secure BCF 3.0 XML and BCFZIP transport."
-  (:require [clojure.string :as string]
+  (:require [kotoba.lang.text :as string]
             [kotoba.issue.bcf :as bcf])
   (:import [java.io ByteArrayInputStream ByteArrayOutputStream StringReader]
            [java.nio.charset StandardCharsets]

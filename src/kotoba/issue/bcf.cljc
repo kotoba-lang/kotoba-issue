@@ -3,7 +3,7 @@
   the generic kotoba.issue workflow. JVM XML/BCFZIP transport lives in
   `kotoba.issue.bcf.xml`."
   (:refer-clojure :exclude [comment])
-  (:require [clojure.string :as string]
+  (:require [kotoba.lang.text :as string]
             [kotoba.issue.gate :as gate]))
 
 (def contract-version 1)
@@ -49,7 +49,7 @@
                  (non-empty-string? creation-date) (non-empty-string? creation-author))
     (throw (ex-info "invalid BCF topic" {:topic value})))
   {:bcf/version "3.0" :bcf/contract-version contract-version
-   :bcf.topic/guid (string/lower-case guid)
+   :bcf.topic/guid (string/lower guid)
    :bcf.topic/type type :bcf.topic/status status :bcf.topic/title title
    :bcf.topic/description description :bcf.topic/creation-date creation-date
    :bcf.topic/creation-author creation-author :bcf.topic/priority priority

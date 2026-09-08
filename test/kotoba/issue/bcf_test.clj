@@ -1,5 +1,5 @@
 (ns kotoba.issue.bcf-test
-  (:require [clojure.string :as string]
+  (:require [kotoba.lang.text :as string]
             [clojure.test :refer [deftest is]]
             [kotoba.issue.bcf :as bcf]
             [kotoba.issue.bcf.xml :as bcf-xml]))

@@ -1,7 +1,7 @@
 (ns kotoba.issue.opencde.http
   "JDK HTTP client for OpenCDE Foundation, Documents and BCF APIs."
   (:require [json.data-json :as json]
-            [clojure.string :as string])
+            [kotoba.lang.text :as string])
   (:import [java.net URI URLEncoder]
            [java.net.http HttpClient HttpRequest HttpRequest$BodyPublishers
             HttpResponse$BodyHandlers]
@@ -50,7 +50,7 @@
          _ (doseq [[key value] headers] (.header builder (name key) (str value)))
          publisher (if payload (HttpRequest$BodyPublishers/ofString payload)
                         (HttpRequest$BodyPublishers/noBody))
-         request (.build (.method builder (string/upper-case (name method)) publisher))
+         request (.build (.method builder (string/upper (name method)) publisher))
          response (.send http-client request (HttpResponse$BodyHandlers/ofString))
          status (.statusCode response)
          decoded (parse-body (.body response))]
