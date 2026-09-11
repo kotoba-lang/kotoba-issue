@@ -130,5 +130,5 @@ full cloud-itonami/manimani → kotoba-issue correspondence table.
 ## Tests
 
 ```sh
-clojure -M:test
+kbb -M:test
 ```
